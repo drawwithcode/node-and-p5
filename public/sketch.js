@@ -11,7 +11,7 @@ function setup() {
   background('red');
   // Create a new connection using socket.io (imported in index.html)
   socket = io();
-  // 
+  //
   socket.on('mouseBroadcast', newDrawing)
 }
 
@@ -39,4 +39,5 @@ function mouseDragged() {
 
 function draw() {
   // put drawing code here
+  background(0,5);
 }
