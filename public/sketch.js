@@ -1,7 +1,16 @@
 // Create a new connection using socket.io (imported in index.html)
 let socket = io();
+
+// define the function that will be called on a new newConnection
+socket.on("connect", newConnection);
+
+function newConnection() {
+  console.log("your id:", socket.id);
+}
+
 // Define which function should be called when a new message
 // comes from the server with type "mouseBroadcast"
+
 socket.on("mouseBroadcast", otherMouse);
 
 function setup() {
