@@ -1,16 +1,24 @@
 {
-  "name": "p5-node",
+  "name": "p5-node-2021",
   "version": "1.0.0",
-  "description": "Simple node app",
+  "description": "First experiment with node",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikima/p5-node-2021.git"
+  },
   "author": "Michele Mauri",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mikima/p5-node-2021/issues"
+  },
+  "homepage": "https://github.com/mikima/p5-node-2021#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^3.0.0"
+    "socket.io": "^4.3.2"
   }
 }

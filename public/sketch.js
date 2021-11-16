@@ -1,51 +1,45 @@
 // Create a new connection using socket.io (imported in index.html)
-let socket = io();
+// make sure you added the following line to index.html:
+// <script src="/socket.io/socket.io.js"></script>
+let clientSocket = io();
 
 // define the function that will be called on a new newConnection
-socket.on("connect", newConnection);
+clientSocket.on("connect", newConnection);
 
 function newConnection() {
-  console.log("your id:", socket.id);
+  console.log("your id:", clientSocket.id);
 }
 
 // Define which function should be called when a new message
 // comes from the server with type "mouseBroadcast"
-
-socket.on("mouseBroadcast", otherMouse);
-
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-  background("red");
-}
+clientSocket.on("mouseBroadcast", otherMouse);
 
 // Callback function called when a new message comes from the server
 // Data parameters will contain the received data
-function otherMouse(data) {
-  console.log("received:", data);
-  noStroke();
+function otherMouse(dataReceived) {
   fill("yellow");
-  ellipse(data.x, data.y, 20);
+  circle(dataReceived.x, dataReceived.y, 20);
 }
 
-function mouseDragged() {
-  console.log("sending: ", mouseX, mouseY);
-  noStroke();
-  fill(255);
+// when the mouse is moved, draw it and send a message to the server
+function mouseMoved() {
+  fill("red");
+  circle(mouseX, mouseY, 10);
 
-  // create an object containing the mouse position
   let message = {
+    id: clientSocket.id,
     x: mouseX,
     y: mouseY,
   };
-  // send the object to server,
-  // tag it as "mouse" event
-  socket.emit("mouse", message);
 
-  ellipse(mouseX, mouseY, 20);
+  clientSocket.emit("mouse", message);
 }
 
-function draw() {
-  // evert draw cycle, add a background with low opacity
-  // to create the "fade" effect
-  background(0, 5);
+// create the artboard
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  background(220);
 }
+
+// draw the circle
+function draw() {}
