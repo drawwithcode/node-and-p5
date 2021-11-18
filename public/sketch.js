@@ -6,6 +6,7 @@ let clientSocket = io();
 // define the function that will be called on a new newConnection
 clientSocket.on("connect", newConnection);
 
+// callback function for "connect" messages
 function newConnection() {
   console.log("your id:", clientSocket.id);
 }
@@ -26,12 +27,15 @@ function mouseMoved() {
   fill("red");
   circle(mouseX, mouseY, 10);
 
+  // create an object containing the mouse position
   let message = {
     id: clientSocket.id,
     x: mouseX,
     y: mouseY,
   };
 
+  // send the object to server,
+  // tag it as "mouse" event
   clientSocket.emit("mouse", message);
 }
 
