@@ -1,6 +1,3 @@
-console.log("hello world!");
-
-const { Socket } = require("engine.io");
 // load express
 let express = require("express");
 

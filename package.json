@@ -1,7 +1,7 @@
 {
-  "name": "p5-node-2021",
+  "name": "p5-node-2022",
   "version": "1.0.0",
-  "description": "First experiment with node",
+  "description": "First experiment with node.js and websockets",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/mikima/p5-node-2021#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "socket.io": "^4.3.2"
   }
 }
