@@ -27,18 +27,18 @@ let io = serverSocket(server);
 // when a new connection is opened from client
 io.on("connection", newConnection);
 
-// callback function: the paramenter (in this case socket)
+// callback function: the parameter (in this case socket)
 // will contain all the information on the new connection
 function newConnection(newSocket) {
   // log the connection in terminal
   console.log("new connection:", newSocket.id);
 
-  // tell to all the others that a new user connected
-  newSocket.on("mouse", incomingMouseMessage);
+  // when the data is incoming, call the funciton incomingMouseMessage
+  newSocket.on("face", incomingMouseMessage);
 
   // callback function run when the "mouse" message is received
   function incomingMouseMessage(dataReceived) {
     // send it to all the clients
-    newSocket.broadcast.emit("mouseBroadcast", dataReceived);
+    newSocket.broadcast.emit("faceBroadcast", dataReceived);
   }
 }
