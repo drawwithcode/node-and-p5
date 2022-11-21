@@ -88,6 +88,12 @@ function draw() {
   let xcur = 15;
   let ycur = 30;
 
+  textAlign(CENTER, CENTER);
+  textSize(50);
+  noStroke();
+  fill(200);
+  text("[press any key]", width / 2, height / 2);
+
   // drew ehac letter in the 'letters' array,
   // received from the server
   letters.forEach((letter) => {
@@ -100,7 +106,7 @@ function draw() {
     rect(0, 0, letter.w, letter.h);
 
     fill(letter.fg);
-    textAlign(CENTER, CENTER);
+
     textSize(letter.fontSize);
     textFont(letter.fontFace);
     text(letter.key, 0, 0);
