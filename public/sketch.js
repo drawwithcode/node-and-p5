@@ -1,4 +1,6 @@
 let letters = [];
+let waitTime = 10 * 1000; // seconds, in milliseconds
+let prevTime = -waitTime; // set to minus wait time so in the first iteration will be 0
 
 // Create a new connection using socket.io (imported in index.html)
 // make sure you added the following line to index.html:
@@ -49,36 +51,41 @@ fontFaces = [
 
 // when a key is typed, define its properties and send to the server
 function keyTyped() {
-  let rotation = random(-5, 5);
-  let color = random(colors);
-  if (key == " ") {
-    color = ["#dcdcdc", "#dcdcdc"];
+  // if the waiting time is elapsed,
+  // then create a new letter and send it
+  // to the server
+  if (millis() > prevTime + waitTime) {
+    prevTime = millis();
+    let rotation = random(-5, 5);
+    let color = random(colors);
+    if (key == " ") {
+      color = ["#dcdcdc", "#dcdcdc"];
+    }
+    let letterHeight = random(30, 50);
+    let letterWidth = random(20, 30);
+
+    // create the message and send it to the server
+    let message = {
+      id: clientSocket.id,
+      key: key,
+      rotation: rotation,
+      bg: color[1],
+      fg: color[0],
+      w: letterWidth,
+      h: letterHeight,
+      fontSize: letterWidth * random(0.7, 0.9),
+      fontFace: random(fontFaces),
+    };
+
+    // send the object to server,
+    // tag it as "mouse" event
+    clientSocket.emit("letter", message);
   }
-  let letterHeight = random(30, 50);
-  let letterWidth = random(20, 30);
-
-  // create the message and send it to the server
-  let message = {
-    id: clientSocket.id,
-    key: key,
-    rotation: rotation,
-    bg: color[1],
-    fg: color[0],
-    w: letterWidth,
-    h: letterHeight,
-    fontSize: letterWidth * random(0.7, 0.9),
-    fontFace: random(fontFaces),
-  };
-
-  // send the object to server,
-  // tag it as "mouse" event
-  clientSocket.emit("letter", message);
 }
 
 // create the artboard
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background("#dcdcdc");
   angleMode(DEGREES);
 }
 
@@ -88,11 +95,26 @@ function draw() {
   let xcur = 15;
   let ycur = 30;
 
+  background("#dcdcdc");
+
   textAlign(CENTER, CENTER);
   textSize(50);
   noStroke();
   fill(200);
-  text("[press any key]", width / 2, height / 2);
+
+  // check if the user must wait time
+  if (millis() > prevTime + waitTime) {
+    // if waiting time is elapesd, print
+    // welcome message
+    text("[press any key]", width / 2, height / 2);
+  } else {
+    // else, print waiting message
+    text(
+      "wait " + round((prevTime + waitTime - millis()) / 1000) + " seconds",
+      width / 2,
+      height / 2
+    );
+  }
 
   // drew ehac letter in the 'letters' array,
   // received from the server
