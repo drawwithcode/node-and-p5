@@ -33,12 +33,12 @@ function newConnection(newSocket) {
   // log the connection in terminal
   console.log("new connection:", newSocket.id);
 
-  // tell to all the others that a new user connected
-  newSocket.on("mouse", incomingMouseMessage);
+  // when a letter message income, call the 'incomingMessage' function
+  newSocket.on("letter", incomingMessage);
 
-  // callback function run when the "mouse" message is received
-  function incomingMouseMessage(dataReceived) {
-    // send it to all the clients
-    newSocket.broadcast.emit("mouseBroadcast", dataReceived);
+  // callback function for the above instruction
+  function incomingMessage(dataReceived) {
+    // send it to all the clients, also the sender
+    io.emit("newLetter", dataReceived);
   }
 }
