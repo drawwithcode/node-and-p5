@@ -1,10 +1,12 @@
 // Create a new connection using socket.io
 let clientSocket = io();
 
-// setup handpose
+// setup facemesh
 let facemesh;
 let video;
 let myMouth;
+
+// variables for colors
 let myColor;
 let mouths = {};
 
@@ -29,12 +31,16 @@ function newConnection() {
 }
 
 // Define which function should be called when a new message
-// comes from the server with type "mouseBroadcast"
+// comes from the server with type "faceBroadcast"
 clientSocket.on("faceBroadcast", otherFace);
 
 // Callback function called when a new message comes from the server
 // Data parameters will contain the received data
 function otherFace(dataReceived) {
+  // add to the mouths object a new entry, using the received id
+  // containing the received data.
+  // this allows to store all the incoming mouths and use later in the draw()
+  // function
   mouths[dataReceived.id] = dataReceived;
 }
 
@@ -44,23 +50,27 @@ function setup() {
 
   //define the user color
   myColor = random(neonColors);
-  console.log(myColor);
-  //video.size(width, height);
 
+  // setup facemesh, define the callback function
+  // that will be called when the model is ready
   facemesh = ml5.facemesh(video, modelReady);
 
-  // This sets up an event that fills the global variable "predictions"
-  // with an array every time new predictions are made
+  // when facemesh find a face, get the data
+  // in the 'results' variable
   facemesh.on("predict", (results) => {
+    // use the getMouth() function to filter
+    // only mouth points
+
     myMouth = getMouth(results);
-    //prepare the message
+
+    //prepare the message for the server
     let message = {
       id: clientSocket.id,
       color: myColor,
       shape: myMouth,
     };
 
-    //send the message
+    //send the message to the server
     clientSocket.emit("face", message);
   });
 
@@ -73,8 +83,6 @@ function modelReady() {
 }
 
 function draw() {
-  //image(video, 0, 0, width, height);
-
   background("black");
 
   noFill();
@@ -86,6 +94,8 @@ function draw() {
     drawMouth(myMouth);
   }
 
+  // for every mouth stored in the 'mouths' variable
+  // draw it
   for (id in mouths) {
     let otherMouth = mouths[id];
     stroke(otherMouth.color);
@@ -93,6 +103,7 @@ function draw() {
   }
 }
 
+// function for drawing a mouth
 function drawMouth(mouth) {
   mouth.forEach((line) => {
     beginShape();
