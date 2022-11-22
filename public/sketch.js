@@ -1,3 +1,6 @@
+let colors = ["red", "green", "violet", "orange", "pink", "azure", "yellow"];
+let myColor;
+
 // Create a new connection using socket.io (imported in index.html)
 // make sure you added the following line to index.html:
 // <script src="/socket.io/socket.io.js"></script>
@@ -18,13 +21,28 @@ clientSocket.on("mouseBroadcast", otherMouse);
 // Callback function called when a new message comes from the server
 // Data parameters will contain the received data
 function otherMouse(dataReceived) {
-  fill("yellow");
+  fill(dataReceived.color);
+  noStroke();
   circle(dataReceived.x, dataReceived.y, 20);
+}
+
+// create the artboard
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  background(0);
+  // select one color
+  myColor = random(colors);
+}
+
+// draw
+function draw() {
+  background(color(0, 0, 0, 5));
 }
 
 // when the mouse is moved, draw it and send a message to the server
 function mouseMoved() {
-  fill("red");
+  fill(myColor);
+  noStroke();
   circle(mouseX, mouseY, 10);
 
   // create an object containing the mouse position
@@ -32,18 +50,10 @@ function mouseMoved() {
     id: clientSocket.id,
     x: mouseX,
     y: mouseY,
+    color: myColor,
   };
 
   // send the object to server,
   // tag it as "mouse" event
   clientSocket.emit("mouse", message);
 }
-
-// create the artboard
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-  background(220);
-}
-
-// draw the circle
-function draw() {}
